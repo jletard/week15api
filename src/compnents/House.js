@@ -1,8 +1,9 @@
 import React from 'react';
 import { NewRoomForm } from './NewRoomForm';
+import { Button, Card, Table } from 'react-bootstrap';
 
 export const House = (props) => {
-    const { house, updateHouse } = props;
+    const { house, updateHouse, deleteHouse } = props;
 
     const deleteRoom = (roomId) => {
         const updatedHouse = {
@@ -12,27 +13,41 @@ export const House = (props) => {
         updateHouse(updatedHouse);
     }
 
-    const addNewRoom = (room) => updateHouse({ ...house, rooms: [...house.rooms, room]});
+    const addNewRoom = (room) => updateHouse({ ...house, rooms: [...house.rooms, room] });
 
     const rooms = () => (
-        <ul>
-            {house.rooms.map((room.index) => (
-                <li key={index}>
-                    <label>{`${room.name} Area: ${room.area}`}</label>
-                    <button onClick={(e) => deleteRoom(room._id)}>Delete</button>
-                </li>
+        <tbody>
+            {house.rooms.map((room, index) => (
+                <tr key={index}>
+                    <td>{room.name}</td>
+                    <td>{room.area}</td>
+                    <td><Button variant="warning" size="sm" onClick={(e) => deleteRoom(room._id)}>Delete Room</Button></td>
+                </tr>
             ))}
-        </ul>
+        </tbody>
     );
 
-    return(
+    return (
         <div>
-            <h1>{house.name}</h1>
-            {
-                rooms({ rooms, houseId: house._id, deleteRoom})
-            }
-            <NewRoomForm addNewRoom={addNewRoom} />
+            <Card>
+                <Card.Header as="h4">{house.name}
+                    <Button variant="danger" onClick={(e) => deleteHouse(house)}>Delete House</Button>
+                </Card.Header>
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>Room Name</th>
+                            <th>Area (sqft)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                        {
+                            rooms({ rooms, houseId: house._id, deleteRoom })
+                        }
+                </Table>
+                <NewRoomForm addNewRoom={addNewRoom} />
+            </Card>
         </div>
     );
-    
+
 };

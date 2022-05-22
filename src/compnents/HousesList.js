@@ -1,10 +1,12 @@
 import React from 'react';
 import { House } from './House';
 import { housesApi } from '../rest/HousesApi.js';
+import { NewHouseForm } from './NewHouseForm';
+import { Card, Stack } from 'react-bootstrap';
 
-export class HousesList extends React.Component {
+export default class HousesList extends React.Component {
     state = {
-        houses =[]
+        houses: []
     };
 
     componentDidMount() {
@@ -21,16 +23,34 @@ export class HousesList extends React.Component {
         this.fetchHouses();
     };
 
+    addHouse = async (addedHouse) => {
+        await housesApi.post(addedHouse);
+        this.fetchHouses();
+    }
+
+    deleteHouse = async (house) => {
+        await housesApi.delete(house);
+        this.fetchHouses();
+    }
+
     render() {
         return (
+
             <div className="house-list">
+                <NewHouseForm addHouse={this.addHouse} />
+                <Stack gap={5}>
                 {this.state.houses.map((house) => (
-                    <House
-                        house={house}
-                        key={house._id}
-                        updatedHouse={this.updatedHouse}
-                    />
+                        <Card style={{width: '90%', align: 'center'}}>
+                            <House
+                                house={house}
+                                key={house._id}
+                                updateHouse={this.updateHouse}
+                                deleteHouse={this.deleteHouse}
+                            />
+                        </Card>
+                    
                 ))}
+                </Stack>
             </div>
         )
     }
